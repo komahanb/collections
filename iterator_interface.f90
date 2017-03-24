@@ -26,28 +26,37 @@ module iterator_interface
 
   implicit none
 
+  private
+
+  public :: Iterator
   type, abstract :: Iterator
 
    contains
 
-     procedure(has_next), deferred :: has_next ! tells if there is a next element
-     procedure(next)    , deferred :: next     ! returns the next element
+     procedure(has_next), deferred :: has_next
+     procedure(next)    , deferred :: next
 
      ! procedure :: remove ! optional
 
   end type Iterator
 
   interface
-
+     
+     !----------------------------------------------------------------!
+     ! Tells if there is a next element in collection
+     !----------------------------------------------------------------!
      pure type(logical) function has_next(this)
        import iterator
-       class(iterator), intent(in):: this
+       class(iterator), intent(in) :: this
      end function has_next
-
+     
+     !----------------------------------------------------------------!
+     ! Returns the next element
+     !----------------------------------------------------------------!     
      pure function next(this)
        import iterator
        class(iterator), intent(in) :: this
-       class(*), allocatable :: next_interface
+       class(*), allocatable       :: next
      end function next
 
   end interface
@@ -62,3 +71,35 @@ end module iterator_interface
 !
 ! Author: Komahan Boopathy (komahan@gatech.edu)
 !=====================================================================!
+
+!!$module ListIterator_interface
+!!$  
+!!$  implicit none
+!!$  
+!!$  use iterator_interface, only : Iterator
+!!$  use list_class, only: list
+!!$
+!!$  Type, Extends(Iterator) :: ListIterator
+!!$
+!!$     
+!!$   contains
+!!$
+!!$     procedure :: add
+!!$     procedure :: has_next
+!!$     procedure :: has_previous
+!!$     procedure :: next
+!!$     procedure :: next_index
+!!$     procedure :: previous_index
+!!$     procedure :: remove
+!!$     procedure :: set
+!!$     
+!!$  End Type ListIterator
+!!$
+!!$contains
+!!$
+!!$  subroutine add(this)
+!!$    class(), intent(inout) :: this
+!!$    class
+!!$  end subroutine add
+!!$
+!!$module ListIterator_interface
