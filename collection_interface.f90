@@ -12,9 +12,9 @@ module collection_interface
 !!$     procedure :: add
 !!$     procedure :: add_all
 !!$     procedure :: clear
-!!$     procedure :: contains
+     procedure :: contains
 !!$     procedure :: contains_all
-!!$     procedure :: is_empty
+     procedure :: is_empty
 !!$     procedure :: remove
 !!$     procedure :: remove_all
 !!$     procedure :: retain_all
@@ -52,5 +52,40 @@ module collection_interface
   end interface
   
 contains
+
+  ! Tell of the collection is empty
+  pure type(logical) function is_empty(this)    
+    class(collection), intent(in) :: this   
+    is_empty = (this % size() == 0)   
+  end function is_empty
+
+  pure type(logical) function contains(this, element)
+    
+    class(collection), intent(in) :: this
+    class(*), intent(in)          :: element
+    class(iterator), allocatable  :: it
+
+    ! Obtain the iterator
+    allocate(it, source = this % get_iterator())
+
+!!$    if (element .eq. null()) then
+!!$    else
+!!$    end if
+    
+    check: do while(it % has_next())
+       
+       if ( element .eq. it % next() ) then
+          contains =  .true.
+          return
+       end if
+       
+    end do check
+    
+    contains = .false.
+    
+   end function contains
+    
+
+  
 
 end module collection_interface
