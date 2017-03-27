@@ -1,14 +1,25 @@
+!=====================================================================!
+! The base abstract implementation for collection of objects as sets,
+! lists. The deferred procedures are to be implemented by specialized
+! collection classes.
+! 
+! Author: Komahan Boopathy (komahan@gatech.edu)
+!=====================================================================!
+
 module collection_interface
 
   use iterator_interface, only : iterator
   
   implicit none
-  
+
+  private
+  public :: collection
+
   type, abstract :: collection
      
    contains
 
-     ! Provided methods
+     ! provided methods
 !!$     procedure :: add
 !!$     procedure :: add_all
 !!$     procedure :: clear
@@ -21,7 +32,7 @@ module collection_interface
 !!$     procedure :: to_array
 !!$     procedure :: to_string
 
-     ! Deferred methods
+     ! deferred methods
      procedure(get_iterator), deferred :: get_iterator
      procedure(size)        , deferred :: size
      
@@ -30,7 +41,7 @@ module collection_interface
   interface
 
      !-----------------------------------------!
-     ! Returns the size of collection
+     ! returns the size of collection
      !-----------------------------------------!
 
      pure type(integer) function size(this)
@@ -39,7 +50,7 @@ module collection_interface
      end function size
 
      !-----------------------------------------!
-     ! Returns an iterator to the collection
+     ! returns an iterator to the collection
      !-----------------------------------------!
 
      pure function get_iterator(this)
@@ -53,11 +64,18 @@ module collection_interface
   
 contains
 
-  ! Tell of the collection is empty
+  !===================================================================!
+  ! returns .true. if the collection is empty
+  !===================================================================!
+
   pure type(logical) function is_empty(this)    
     class(collection), intent(in) :: this   
-    is_empty = (this % size() == 0)   
+    is_empty = this % size() == 0
   end function is_empty
+
+  !===================================================================!
+  ! returns .true. if the collection contains the 'element'
+  !===================================================================!
 
   pure type(logical) function contains(this, element)
     
@@ -65,7 +83,7 @@ contains
     class(*), intent(in)          :: element
     class(iterator), allocatable  :: it
 
-    ! Obtain the iterator
+    ! obtain the iterator
     allocate(it, source = this % get_iterator())
 
 !!$    if (element .eq. null()) then
@@ -84,8 +102,6 @@ contains
     contains = .false.
     
    end function contains
-    
-
   
 
 end module collection_interface

@@ -27,9 +27,9 @@ module iterator_interface
   implicit none
 
   private
+  public :: iterator
 
-  public :: Iterator
-  type, abstract :: Iterator
+  type, abstract :: iterator
 
    contains
 
@@ -38,12 +38,12 @@ module iterator_interface
 
      ! procedure :: remove ! optional
 
-  end type Iterator
+  end type iterator
 
   interface
      
      !----------------------------------------------------------------!
-     ! Tells if there is a next element in collection
+     ! tells if there is a next element in collection
      !----------------------------------------------------------------!
      pure type(logical) function has_next(this)
        import iterator
@@ -51,7 +51,7 @@ module iterator_interface
      end function has_next
      
      !----------------------------------------------------------------!
-     ! Returns the next element
+     ! returns the next element
      !----------------------------------------------------------------!     
      pure function next(this)
        import iterator
@@ -66,20 +66,20 @@ contains
 end module iterator_interface
 
 !=====================================================================!
-! ListIterator extends Iterator to allow bidirectional traversal of a
+! listiterator extends iterator to allow bidirectional traversal of a
 ! list, and the modification of elements.
 !
-! Author: Komahan Boopathy (komahan@gatech.edu)
+! author: komahan boopathy (komahan@gatech.edu)
 !=====================================================================!
 
-!!$module ListIterator_interface
+!!$module listiterator_interface
 !!$  
 !!$  implicit none
 !!$  
-!!$  use iterator_interface, only : Iterator
+!!$  use iterator_interface, only : iterator
 !!$  use list_class, only: list
 !!$
-!!$  Type, Extends(Iterator) :: ListIterator
+!!$  type, extends(iterator) :: listiterator
 !!$
 !!$     
 !!$   contains
@@ -93,7 +93,7 @@ end module iterator_interface
 !!$     procedure :: remove
 !!$     procedure :: set
 !!$     
-!!$  End Type ListIterator
+!!$  end type listiterator
 !!$
 !!$contains
 !!$
@@ -102,4 +102,4 @@ end module iterator_interface
 !!$    class
 !!$  end subroutine add
 !!$
-!!$module ListIterator_interface
+!!$module listiterator_interface
