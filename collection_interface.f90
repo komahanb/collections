@@ -9,6 +9,7 @@
 module collection_interface
 
   use iterator_interface, only : iterator
+  use object_class, only : object
   
   implicit none
 
@@ -77,26 +78,32 @@ contains
   ! returns .true. if the collection contains the 'element'
   !===================================================================!
 
-  pure type(logical) function contains(this, element)
+  type(logical) function contains(this, element)
     
-    class(collection), intent(in) :: this
-    class(*), intent(in)          :: element
-    class(iterator), allocatable  :: it
+    class(collection) , intent(in)  :: this
+    class(object)     , intent(in)  :: element
+    class(iterator)   , allocatable :: it
 
-    ! obtain the iterator
+    ! Obtain the iterator
     allocate(it, source = this % get_iterator())
 
 !!$    if (element .eq. null()) then
 !!$    else
 !!$    end if
     
+    ! Check if the object is null (loc is impure ??!!)
+    if (loc(element) .eq. 0) then
+       contains = .false.
+       return
+    end if
+
     check: do while(it % has_next())
-       
-       if ( element .eq. it % next() ) then
+
+       if (element%equals(it%next())) then
           contains =  .true.
           return
        end if
-       
+      
     end do check
     
     contains = .false.

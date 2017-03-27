@@ -24,6 +24,8 @@
 
 module iterator_interface
 
+  use object_class, only : object
+
   implicit none
 
   private
@@ -55,8 +57,10 @@ module iterator_interface
      !----------------------------------------------------------------!     
      pure function next(this)
        import iterator
-       class(iterator), intent(in) :: this
-       class(*), allocatable       :: next
+       import object
+       class(iterator), intent(in) :: this     
+       class(object), allocatable  :: next
+       !       class(*), allocatable       :: next
      end function next
 
   end interface
