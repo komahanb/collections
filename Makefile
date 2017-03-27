@@ -7,3 +7,6 @@ default:
 
 test:
 	gfortran-6 object_class.f90 string_class.f90 iterator_interface.f90 collection_interface.f90 test_hashcode.f90
+
+clean:
+	rm *.o *.mod *~

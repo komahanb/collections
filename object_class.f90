@@ -28,9 +28,10 @@ contains
   
   type(logical) function equals(this, element)
 
-    class(object), intent(in) :: this
-    class(object), intent(in) :: element 
+    class(object) , intent(in) :: this
+    class(*)      , intent(in) :: element 
 
+    ! compare the memory addresses
     equals = loc(element) .eq. loc(this)
 
   end function equals

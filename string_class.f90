@@ -25,7 +25,7 @@ module string_class
 
      ! Override the parent class methods
      procedure :: hashcode
-     !procedure :: equals
+     procedure :: equals
 
      ! Destructor
      final :: destroy
@@ -68,16 +68,18 @@ contains
 
   !===================================================================!
   ! Returns the hashcode of the string object
+  !
+  ! Note: This is an overridden procedure.
   !===================================================================!
 
   type(integer) function hashcode(this)
-
+    
     class(string), intent(inout) :: this
     type(integer) :: h, i, length, s
-
+    
     length = this % count
     h      = this % hash
-
+    
     ! Find the hash only if it not found already
     if ( h .eq. 0 ) then
 
@@ -96,5 +98,42 @@ contains
     hashcode = h
 
   end function hashcode
+
+  !===================================================================!
+  ! Returns if the supplied string is equal to the string on which
+  ! this method is invoked.
+  !
+  ! Note: This is an overridden procedure.
+  !===================================================================!
+  
+  type(logical) function equals(this, element)
+
+    class(string) , intent(in) :: this
+    class(*)      , intent(in) :: element 
+
+    ! Return .true. right away if they are the same memory locations
+    if (loc(element) .eq. loc(this)) then
+       equals = .true.
+       return
+    end if
+
+    ! Determine the type at runtime
+    select type(element)
+
+    ! Raw character array
+    type is (character(len=*))
+       equals  = this % str .eq. element
+
+    ! Wrapped string
+    class is (string)
+       equals = element % str .eq. this % str
+
+    ! Not a string , so they can't be equal
+    class default
+       equals = .false.
+
+    end select
+
+  end function equals
   
 end module string_class

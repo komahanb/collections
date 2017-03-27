@@ -35,6 +35,14 @@ program test_hashcode_equals
   print *, first_name % equals(first_name)
   print *, last_name  % equals(last_name)
 
+  ! Test other possibilities
+  print *, last_name  % equals(1.213124234d0)
+  print *, last_name  % equals(234231)
+  print *, last_name  % equals(obj)
+  print *, last_name  % equals("Boopathy")
+  print *, last_name  % equals("boopathy")
+  print *, last_name  % equals(last_name)
+  
   ! Test the to_string implementation
   print *, obj % to_string()
   print *, first_name % to_string()
