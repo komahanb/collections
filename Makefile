@@ -3,6 +3,7 @@ default:
 	gfortran-6 -c string_class.f90
 	gfortran-6 -c iterator_interface.f90
 	gfortran-6 -c collection_interface.f90
+	gfortran-6 -c abstract_collection_class.f90
 	gfortran-6 -c map_interface.f90
 	gfortran-6 -c abstract_map_class.f90
 	gfortran-6 -c test_hashcode.f90
