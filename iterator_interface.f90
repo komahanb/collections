@@ -53,14 +53,14 @@ module iterator_interface
      end function has_next
      
      !----------------------------------------------------------------!
-     ! returns the next element
-     !----------------------------------------------------------------!     
-     pure function next(this)
+     ! Returns the next element in collection
+     !----------------------------------------------------------------!
+     
+     pure function next(this) result(next_entry)
        import iterator
        import object
        class(iterator), intent(in) :: this     
-       class(object), allocatable  :: next
-       !       class(*), allocatable       :: next
+       class(object), allocatable       :: next_entry
      end function next
 
   end interface
@@ -68,42 +68,3 @@ module iterator_interface
 contains
 
 end module iterator_interface
-
-!=====================================================================!
-! listiterator extends iterator to allow bidirectional traversal of a
-! list, and the modification of elements.
-!
-! author: komahan boopathy (komahan@gatech.edu)
-!=====================================================================!
-
-!!$module listiterator_interface
-!!$  
-!!$  implicit none
-!!$  
-!!$  use iterator_interface, only : iterator
-!!$  use list_class, only: list
-!!$
-!!$  type, extends(iterator) :: listiterator
-!!$
-!!$     
-!!$   contains
-!!$
-!!$     procedure :: add
-!!$     procedure :: has_next
-!!$     procedure :: has_previous
-!!$     procedure :: next
-!!$     procedure :: next_index
-!!$     procedure :: previous_index
-!!$     procedure :: remove
-!!$     procedure :: set
-!!$     
-!!$  end type listiterator
-!!$
-!!$contains
-!!$
-!!$  subroutine add(this)
-!!$    class(), intent(inout) :: this
-!!$    class
-!!$  end subroutine add
-!!$
-!!$module listiterator_interface

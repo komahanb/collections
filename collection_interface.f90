@@ -69,17 +69,20 @@ contains
   ! returns .true. if the collection is empty
   !===================================================================!
 
-  pure type(logical) function is_empty(this)    
-    class(collection), intent(in) :: this   
-    is_empty = this % size() == 0
+  pure type(logical) function is_empty(this)
+    
+    class(collection), intent(in) :: this
+    
+    is_empty = this % size() .eq. 0
+    
   end function is_empty
 
   !===================================================================!
   ! returns .true. if the collection contains the 'element'
   !===================================================================!
-
+  
   type(logical) function contains(this, element)
-    
+
     class(collection) , intent(in)  :: this
     class(object)     , intent(in)  :: element
     class(iterator)   , allocatable :: it
@@ -87,28 +90,36 @@ contains
     ! Obtain the iterator
     allocate(it, source = this % get_iterator())
 
-!!$    if (element .eq. null()) then
-!!$    else
-!!$    end if
-    
-    ! Check if the object is null (loc is impure ??!!)
-    if (loc(element) .eq. 0) then
-       contains = .false.
-       return
-    end if
-
-    check: do while(it % has_next())
-
-       if (element%equals(it%next())) then
-          contains =  .true.
-          return
-       end if
-      
-    end do check
-    
+    ! Assume that the element is not in the collection
     contains = .false.
     
-   end function contains
-  
+    if (loc(element) .eq. 0) then
+       
+       check_null_obj: do while(it % has_next())
+          
+          ! If you get an not associated pointer, then yay!
+          if ( .not. associated(it%next()) ) then
+             contains =  .true.
+             return
+          end if
+
+       end do check_null_obj
+
+       print *, "NULL element encountered!!!"
+
+    else
+
+       check_not_null: do while(it % has_next())
+
+          if (element % equals( it%next() )) then
+             contains =  .true.
+             return
+          end if
+          
+       end do check_not_null
+
+    end if
+    
+  end function contains
 
 end module collection_interface

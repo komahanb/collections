@@ -1,12 +1,12 @@
 default:
-	gfortran-6 -c object_class.f90
-	gfortran-6 -c string_class.f90
-	gfortran-6 -c iterator_interface.f90
-	gfortran-6 -c collection_interface.f90
-	gfortran-6 -c test_hashcode.f90
+	gfortran-5 -c object_class.f90
+	gfortran-5 -c string_class.f90
+	gfortran-5 -c iterator_interface.f90
+	gfortran-5 -c collection_interface.f90
+	gfortran-5 -c test_hashcode.f90
 
 test:
-	gfortran-6 object_class.f90 string_class.f90 iterator_interface.f90 collection_interface.f90 test_hashcode.f90
+	gfortran-5 object_class.f90 string_class.f90 iterator_interface.f90 collection_interface.f90 test_hashcode.f90
 
 clean:
 	rm *.o *.mod *~
