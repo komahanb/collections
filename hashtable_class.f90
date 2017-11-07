@@ -12,11 +12,11 @@ module hashtable_class
 
   type :: hashtable
 
-     class(*), allocatable :: table(:)    ! number of values
-     type(integer)         :: count       ! number of keys
-     type(integer)         :: threshold   ! threshold for rehashing
-     type(integer)         :: load_factor ! factor to increase the size
-     type(integer)         :: mod_count   ! number of rehashings happened since creation
+     class(object), allocatable :: table(:) ! number of values
+     type(integer)         :: count         ! number of keys
+     type(integer)         :: threshold     ! threshold for rehashing
+     type(integer)         :: load_factor   ! factor to increase the size
+     type(integer)         :: mod_count     ! number of rehashings happened since creation
 
    contains
 
@@ -33,10 +33,10 @@ contains
        & result(this)
 
     type(integer) , intent(in) :: initial_capacity
-    type(real(dp)), intent(in) :: load_factor
+    type(real(dp)), intent(in) :: load_factor    
 
     ! Sanity check in the initial capacity of hashtable
-    if (initial_capacity .lt. 0) then
+    if (initial_capacity .le. 0) then
        print *, "Invalid initial capacity", initial_capacity
        stop
     end if
@@ -51,8 +51,8 @@ contains
     this % load_factor = load_factor
     this % threshold   = int(initial_capacity*load_factor)
 
-    ! Allocate space
-    ! this % table
+    ! Allocate space for entries
+    allocate( this % table (initial_capacity) )
 
     ! Zero the number of size modifications so far (rehashing)
     this % mod_count = 0

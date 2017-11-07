@@ -55,7 +55,7 @@ contains
   end function create
   
   !=================================================================!
-  ! Destructor for the ABM integrator
+  ! Destructor for string object
   !=================================================================!
   
   pure subroutine destroy(this)

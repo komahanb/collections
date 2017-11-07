@@ -12,6 +12,5 @@ default:
 
 	gfortran-6 -c test_hashcode.f90
 	gfortran-6 -o test_hashcode test_hashcode.o libcollections.a 
-
 clean:
 	rm *.o *.mod *~ *.a
