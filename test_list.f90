@@ -5,7 +5,7 @@
 program test_list
 
   use string_class
-  use list_class
+  use linked_list_class
 
   class(list), allocatable :: mylist
   

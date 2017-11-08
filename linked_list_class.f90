@@ -1,4 +1,4 @@
-module list_class
+module linked_list_class
 
   implicit none
 
@@ -124,4 +124,4 @@ contains
      
   end subroutine append
   
-end module list_class
+end module linked_list_class

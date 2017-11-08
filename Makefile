@@ -12,7 +12,7 @@ default:
 	gfortran-7 -c abstract_map_class.f90
 	gfortran-7 -c hashmap_class.f90
 
-	gfortran-7 -c list.f90
+	gfortran-7 -c linked_list_class.f90
 
 	ar rvs libcollections.a *.o *.mod
 
