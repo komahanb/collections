@@ -13,7 +13,7 @@ module hashtable_class
   private
   public :: hashtable
 
-  type :: hashtable
+  type, extends(object) :: hashtable
 
      class(object), allocatable :: table(:) ! number of values
      type(integer)         :: count         ! number of keys

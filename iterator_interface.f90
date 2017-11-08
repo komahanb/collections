@@ -31,7 +31,7 @@ module iterator_interface
   private
   public :: iterator
 
-  type, abstract :: iterator
+  type, extends(object), abstract :: iterator
 
    contains
 

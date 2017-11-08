@@ -14,7 +14,7 @@ module collection_interface
   private
   public :: collection
 
-  type, abstract :: collection
+  type, extends(object), abstract :: collection
 
    contains
 

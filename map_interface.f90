@@ -7,7 +7,7 @@ module map_interface
   private
   public :: map
 
-  type, abstract, extends(object) :: map
+  type, extends(object), abstract :: map
    contains
      procedure(size)           , deferred :: size
      procedure(is_empty)       , deferred :: is_empty
