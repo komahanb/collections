@@ -15,7 +15,7 @@ module hashtable_class
 
   type, extends(object) :: hashtable
 
-     class(object), allocatable :: table(:) ! number of values
+     class(object), allocatable :: table(:) ! table of values
      type(integer)         :: count         ! number of keys
      type(integer)         :: threshold     ! threshold for rehashing
      type(integer)         :: load_factor   ! factor to increase the size
@@ -23,6 +23,11 @@ module hashtable_class
 
    contains
 
+     ! overridden print method
+     procedure :: print
+     
+     !procedure :: rehash
+     
   end type hashtable
 
   ! Constructor
@@ -57,9 +62,24 @@ contains
     ! Allocate space for entries
     allocate( this % table (initial_capacity) )
 
+    ! Set the number of entries
+    this % count = size(this % table)
+
     ! Zero the number of size modifications so far (rehashing)
     this % mod_count = 0
 
   end function create_hashtable
 
+  subroutine print(this)
+    
+    class(hashtable), intent(inout) :: this
+    
+    print *, "hashtable@    ", this % hashcode()
+    print *, " count:       ", this % count
+    print *, " threshold:   ", this % threshold
+    print *, " load_factor: ", this % load_factor
+    print *, " mod_count:   ", this % mod_count
+
+  end subroutine print
+  
 end module hashtable_class

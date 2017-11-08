@@ -7,19 +7,40 @@ module object_class
 
   type :: object
 
+     class(*), allocatable :: data
+     type(integer)         :: hash = 0
+     
    contains
      
      procedure :: equals
      procedure :: hashcode
-     procedure :: to_string
+     procedure :: print
 
 !!$     procedure :: clone
 !!$     procedure :: finalize
 !!$     procedure :: get_class
 
   end type object
+  
+  interface object
+     module procedure create_object
+  end interface object
 
 contains
+
+  !===================================================================!
+  ! Wrap the primitive/derived type and create an object
+  !===================================================================!
+  
+  type(object) function create_object(data) result(this)
+    
+    class(*), intent(in), optional :: data
+    
+    if (present(data)) allocate(this % data, source = data)
+
+    this % hash = loc(this)
+    
+  end function create_object
   
   !===================================================================!
   ! Returns if the supplied instance is equal to the instance on which
@@ -44,8 +65,13 @@ contains
 
     class(object), intent(inout) :: this
 
+    ! Set hashcode if constructor was not invoked before
+    if ( this % hash .eq. 0 ) then
+       this % hash = loc(this)
+    end if
+    
     ! Return the memory address as hashcode
-    hashcode = loc(this)
+    hashcode = this % hash
 
   end function hashcode
   
@@ -53,12 +79,12 @@ contains
   ! Returns the string representation of the object
   !===================================================================!
   
-  type(character(len=32)) function to_string(this)
-
+  subroutine print(this)
+    
     class(object), intent(inout) :: this
-
-    to_string = "object@"//char(this % hashcode())
-
-  end function to_string
+    
+    print *, "object@", this % hashcode()
+    
+  end subroutine print
 
 end module object_class

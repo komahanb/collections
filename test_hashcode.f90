@@ -44,7 +44,7 @@ program test_hashcode_equals
   print *, last_name  % equals(last_name)
   
   ! Test the to_string implementation
-  print *, obj % to_string()
-  print *, first_name % to_string()
+  call obj % print()
+  call first_name % print()
   
 end program test_hashcode_equals

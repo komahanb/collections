@@ -14,14 +14,13 @@ module abstract_map_class
   end type abstract_map
  
   type, extends(object) :: map_entry
-     type(integer)                 :: hash
      class(*)        , allocatable :: key
      class(*)        , allocatable :: value
      type(map_entry) , pointer     :: next
    contains
      ! Override equals and hashcode of object type
-!     procedure :: equals => equals
-!     procedure :: hashcode => hashcode     
+     !     procedure :: equals => equals
+     !     procedure :: hashcode => hashcode     
      !     procedure :: get_key
      !     procedure :: get_value, set_value
      !     procedure :: to_string

@@ -16,6 +16,9 @@ default:
 
 	ar rvs libcollections.a *.o *.mod
 
+	gfortran-7 -c test_hashtable.f90
+	gfortran-7 -o test_hashtable test_hashtable.o libcollections.a
+
 	gfortran-7 -c test_hashcode.f90
 	gfortran-7 -o test_hashcode test_hashcode.o libcollections.a 
 

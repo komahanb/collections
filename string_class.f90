@@ -19,12 +19,10 @@ module string_class
 
      character(:), allocatable :: str   ! character array
      type(integer)             :: count ! length
-     type(integer)             :: hash  ! hashcode value computed at creation
 
    contains
 
      ! Override the parent class methods
-     procedure :: hashcode
      procedure :: equals
 
      ! Destructor
@@ -47,10 +45,19 @@ contains
   pure type(string) function create(str) result (this)
 
     type(character(*)), intent(in) :: str
-
+    type(integer) :: h, i, s
+    
     allocate(this % str, source=str) ! source copies, mold does not
     this % count = len(str)
-    this % hash = 0
+    
+    ! Compute hash: s[1]*31^(n) + s[2]*31^(n-1) + ... + s[n]*31^0
+    do i = 1, this % count
+       s = ichar(this % str(i:i))
+       h = h + s*(31**(this%count-1))
+    end do
+
+    ! Set into the instance
+    this % hash = h
 
   end function create
   
@@ -65,39 +72,6 @@ contains
     if(allocated(this % str)) deallocate(this % str)
 
   end subroutine destroy
-
-  !===================================================================!
-  ! Returns the hashcode of the string object
-  !
-  ! Note: This is an overridden procedure.
-  !===================================================================!
-
-  type(integer) function hashcode(this)
-    
-    class(string), intent(inout) :: this
-    type(integer) :: h, i, length, s
-    
-    length = this % count
-    h      = this % hash
-    
-    ! Find the hash only if it not found already
-    if ( h .eq. 0 ) then
-
-       ! Compute hash: s[1]*31^(n) + s[2]*31^(n-1) + ... + s[n]*31^0
-       do i = 1, length
-          s = ichar(this % str(i:i))
-          h = h + s*(31**(length-1))
-       end do
-       
-       ! Set into the instance
-       this % hash = h
-
-    end if
-
-    ! Set the return value
-    hashcode = h
-
-  end function hashcode
 
   !===================================================================!
   ! Returns if the supplied string is equal to the string on which
