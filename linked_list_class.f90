@@ -1,17 +1,38 @@
+!=====================================================================!
+! Module containing linked list implementations
+!=====================================================================!
+
 module linked_list_class
 
   use object_class, only : object
 
   implicit none
 
+  private
+
+  public :: node, doubly_linked_list
+
+  !-------------------------------------------------------------------!
+  ! Node is a special type of object that points to other nodes
+  !-------------------------------------------------------------------!
+
   type, extends(object) :: node
-     
-     ! class(*), allocatable :: data ! already a part of object
-     type(node), allocatable :: next ! will manually type guard to node
+         
+     type(node), allocatable :: next
 
   end type node
 
-  type, extends(object) :: list
+  ! Publicly visible polymorphic function to create node
+  interface node
+     module procedure create_node
+  end interface node
+
+  !-------------------------------------------------------------------!
+  ! Doubly linked list is a specialized object that points to next and
+  ! previous nodes
+  !-------------------------------------------------------------------!
+
+  type, extends(object) :: doubly_linked_list
      
      class(node), allocatable :: head
      class(node), allocatable :: tail
@@ -21,15 +42,12 @@ module linked_list_class
 
      procedure :: append
 
-  end type list
+  end type doubly_linked_list
 
-  interface node
-     module procedure create_node
-  end interface node
-
-  interface list
-     module procedure create_list
-  end interface list
+  ! public function to create doubly linked list
+  interface doubly_linked_list
+     module procedure create_doubly_linked_list
+  end interface doubly_linked_list
 
 contains
 
@@ -53,40 +71,14 @@ contains
   ! Instantiate an empty list
   !===================================================================!
   
-  type(list) function create_list() result(this)
+  type(doubly_linked_list) function create_doubly_linked_list() &
+       & result(this)
 
     if (allocated(this % head)) deallocate(this % head)
     if (allocated(this % tail)) deallocate(this % tail)
     this % length = 0
     
-  end function create_list
-
-  !===================================================================!
-  ! Destructor for list
-  !===================================================================!
-  
-  subroutine destroy_list(this)
-    
-    type(list), intent(inout) :: this
-
-    print *, "list dies"
-
-!!$    if (allocated(this % head)) then
-!!$       deallocate(this % head)
-!!$    else
-!!$       print *, "skip head"
-!!$    end if
-!!$
-!!$    if (allocated(this % tail)) then
-!!$       if (allocated(this % tail % next)) then
-!!$          deallocate(this % tail % next)
-!!$       end if
-!!$       deallocate(this % tail)
-!!$    else
-!!$       print *, "skip tail"
-!!$    end if
-         
-  end subroutine destroy_list
+  end function create_doubly_linked_list
 
   !===================================================================!
   ! Append the item to list of nodes
@@ -94,7 +86,7 @@ contains
   
    subroutine append(this, item)
 
-     class(list), intent(inout) :: this     
+     class(doubly_linked_list), intent(inout) :: this     
      class(*), intent(in) :: item
      
      type(node) :: newnode

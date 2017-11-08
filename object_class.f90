@@ -8,7 +8,7 @@ module object_class
   type :: object
 
      class(*), allocatable :: data
-     type(integer)         :: hash = 0
+     type(integer) :: hash = 0
      
    contains
      
