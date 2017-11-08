@@ -6,9 +6,12 @@
 module hashtable_class
 
   use iso_fortran_env, only : dp => REAL64
-  use iterator_interface, only : iterator
+  use object_class, only : object
 
   implicit none
+
+  private
+  public :: hashtable
 
   type :: hashtable
 
@@ -23,13 +26,13 @@ module hashtable_class
   end type hashtable
 
   ! Constructor
-  interface hastable
-     module procedure hashtable_
-  end interface hastable
+  interface hashtable
+     module procedure create_hashtable
+  end interface hashtable
 
 contains
 
-  type(hashtable) function hashtable_(initial_capacity, load_factor) &
+  type(hashtable) function create_hashtable(initial_capacity, load_factor) &
        & result(this)
 
     type(integer) , intent(in) :: initial_capacity
@@ -57,6 +60,6 @@ contains
     ! Zero the number of size modifications so far (rehashing)
     this % mod_count = 0
 
-  end function hashtable_
+  end function create_hashtable
 
 end module hashtable_class

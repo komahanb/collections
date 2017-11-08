@@ -4,13 +4,9 @@ module list_class
 
   type :: node
      
-     class(*)  , allocatable :: data
-     type(node), allocatable :: next
-     
-   contains
+     class(*), allocatable :: data
+     type(node), allocatable :: next ! will manually type guard to node
 
-     !final :: destroy_node
-     
   end type node
 
   type :: list
@@ -22,7 +18,6 @@ module list_class
    contains
 
      procedure :: append
-     !final :: destroy_list
 
   end type list
 
@@ -30,7 +25,7 @@ module list_class
      module procedure create_node
   end interface node
 
-    interface list
+  interface list
      module procedure create_list
   end interface list
 
@@ -63,6 +58,33 @@ contains
     this % length = 0
     
   end function create_list
+
+  !===================================================================!
+  ! Destructor for list
+  !===================================================================!
+  
+  subroutine destroy_list(this)
+    
+    type(list), intent(inout) :: this
+
+    print *, "list dies"
+
+!!$    if (allocated(this % head)) then
+!!$       deallocate(this % head)
+!!$    else
+!!$       print *, "skip head"
+!!$    end if
+!!$
+!!$    if (allocated(this % tail)) then
+!!$       if (allocated(this % tail % next)) then
+!!$          deallocate(this % tail % next)
+!!$       end if
+!!$       deallocate(this % tail)
+!!$    else
+!!$       print *, "skip tail"
+!!$    end if
+         
+  end subroutine destroy_list
 
   !===================================================================!
   ! Append the item to list of nodes
@@ -103,26 +125,3 @@ contains
   end subroutine append
   
 end module list_class
-
-!=====================================================================!
-! Test program for list
-!=====================================================================!
-
-program test_list
-
-  use list_class
-
-  type(list) :: mylist
-  
-  mylist = list()
-
-  call mylist % append(1)
-  call mylist % append(2)
-  call mylist % append(1.2)
-  call mylist % append("komahan boopathy")
-  call mylist % append(mylist)
-  !call mylist % append(1)
-  
-  print *, mylist % length
-  
-end program test_list
