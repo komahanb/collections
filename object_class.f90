@@ -19,7 +19,9 @@ module object_class
 !!$     procedure :: clone
 !!$     procedure :: finalize
 !!$     procedure :: get_class
-
+     
+!!$     generic :: assignment(=) => set_entry
+     
   end type object
   
   interface object
@@ -37,7 +39,7 @@ contains
     class(*), intent(in), optional :: data
     
     if (present(data)) allocate(this % data, source = data)
-
+    print *, "creating object", loc(this)
     this % hash = loc(this)
     
   end function create_object

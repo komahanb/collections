@@ -15,7 +15,7 @@ module hashtable_class
 
   type, extends(object) :: hashtable
 
-     class(object), allocatable :: table(:) ! table of values
+     class(object), allocatable, dimension(:) :: table ! table of values
      type(integer)         :: count         ! number of keys
      type(integer)         :: threshold     ! threshold for rehashing
      type(integer)         :: load_factor   ! factor to increase the size
@@ -25,7 +25,6 @@ module hashtable_class
 
      ! overridden print method
      procedure :: print
-     
      !procedure :: rehash
      
   end type hashtable
@@ -36,7 +35,7 @@ module hashtable_class
   end interface hashtable
 
 contains
-
+  
   type(hashtable) function create_hashtable(initial_capacity, load_factor) &
        & result(this)
 
@@ -60,7 +59,7 @@ contains
     this % threshold   = int(initial_capacity*load_factor)
 
     ! Allocate space for entries
-    allocate( this % table (initial_capacity) )
+    !allocate( this % table (initial_capacity) )
 
     ! Set the number of entries
     this % count = size(this % table)
