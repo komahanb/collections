@@ -25,6 +25,7 @@ program test_hashcode_equals
 
   ! Point the polymorphic variable to some other string
   deallocate(obj)
+
   allocate(obj, source = string("John"))
   print * , "hashcode object    :", obj % hashcode()
   

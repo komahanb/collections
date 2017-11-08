@@ -1,15 +1,17 @@
 module linked_list_class
 
+  use object_class, only : object
+
   implicit none
 
-  type :: node
+  type, extends(object) :: node
      
-     class(*), allocatable :: data
+     ! class(*), allocatable :: data ! already a part of object
      type(node), allocatable :: next ! will manually type guard to node
 
   end type node
 
-  type :: list
+  type, extends(object) :: list
      
      class(node), allocatable :: head
      class(node), allocatable :: tail
