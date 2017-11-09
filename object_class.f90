@@ -43,7 +43,7 @@ contains
   type(logical) function equals(this, element)
     
     class(object) , intent(in) :: this
-    class(*)      , intent(in) :: element 
+    class(*) , intent(in) :: element 
 
     ! objects are equal only if they are coexistant in space-time
     equals = loc(element) .eq. loc(this)

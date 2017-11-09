@@ -6,7 +6,6 @@
 
 module string_class
   
-  ! Dependencies
   use object_class, only : object
 
   implicit none
@@ -14,23 +13,29 @@ module string_class
   private
   public :: string
 
+  !-------------------------------------------------------------------!
   ! Derived type for string
+  !-------------------------------------------------------------------!
+  
   type, extends(object) :: string
 
-     character(:), allocatable :: str   ! character array
-     type(integer)             :: count ! length
+     character(:), allocatable :: str ! character array
+     type(integer) :: count ! length
 
    contains
 
-     ! Override the parent class methods
-     ! procedure :: equals
-
+     ! Override
+     procedure :: print
+     
      ! Destructor
      final :: destroy
 
   end type string
-  
+
+  !-------------------------------------------------------------------!
   ! Interface to construct a string
+  !-------------------------------------------------------------------!
+  
   interface string
      module procedure create
   end interface string
@@ -47,13 +52,14 @@ contains
     type(character(*)), intent(in) :: str
     
     allocate(this % str, source=str) ! source copies, mold does not
+    
     this % count = len(str)    
 
   end function create
   
-  !=================================================================!
+  !===================================================================!
   ! Destructor for string object
-  !=================================================================!
+  !===================================================================!
   
   pure subroutine destroy(this)
 
@@ -64,42 +70,15 @@ contains
   end subroutine destroy
 
   !===================================================================!
-  ! Returns if the supplied string is equal to the string on which
-  ! this method is invoked.
-  !
-  ! Note: This is an overridden procedure.
+  ! Returns the string representation of the object
   !===================================================================!
   
-  type(logical) function equals(this, element)
-
-    class(string), intent(in) :: this
-    class(*)     , intent(in) :: element
-
-    ! Return .true. right away if they are the same memory locations
-    if (loc(element) .eq. loc(this)) then
-       equals = .true.
-       return
-    end if
+  subroutine print(this)
     
-!!$
-!!$    ! Determine the type at runtime
-!!$    select type(element)
-!!$
-!!$    ! Raw character array
-!!$    type is (character(len=*))
-!!$       equals  = this % str .eq. element
-!!$
-!!$    ! Wrapped string
-!!$    class is (string)
-!!$       equals = element % str .eq. this % str
-!!$       equals = element.equals(this % str)
-!!$
-!!$    ! Not a string , so they can't be equal
-!!$    class default
-!!$       equals = .false.
-!!$
-!!$    end select
-
-  end function equals
+    class(string), intent(in) :: this
+    
+    print *, "string : ", this % str
+    
+  end subroutine print
   
 end module string_class

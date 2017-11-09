@@ -19,8 +19,19 @@ module linked_list_class
   !-------------------------------------------------------------------!
 
   type, extends(object) :: node
-         
+
+     ! The data can be encapsulated as any object
+     class(object), allocatable :: data
+
+     ! Points to the next node
      type(node), allocatable :: next
+
+     ! Points to the previous node
+     type(node), allocatable :: prev
+
+   contains
+
+     procedure :: print
 
   end type node
 
@@ -36,9 +47,9 @@ module linked_list_class
 
   type, extends(abstract_collection) :: doubly_linked_list
      
-     class(node), allocatable :: head
-     class(node), allocatable :: tail
-     type(integer)            :: length
+     type(node), allocatable :: head
+     type(node), allocatable :: tail
+     type(integer) :: length
           
    contains
 
@@ -46,6 +57,7 @@ module linked_list_class
      procedure :: size
      procedure :: get_iterator
 
+     ! Special methods
      procedure :: append
 
   end type doubly_linked_list
@@ -61,12 +73,14 @@ module linked_list_class
   
   type, extends(iterator) :: list_iterator
      
-     class(node), allocatable :: current_node
+     type(node), allocatable :: current_node
 
    contains
      
      procedure :: has_next
      procedure :: next
+     !procedure :: has_prev
+     !procedure :: prev
 
      final :: destroy
      
@@ -102,7 +116,7 @@ contains
   
   pure type(node) function create_node(data) result(this)
 
-    class(*), intent(in) :: data
+    class(object), intent(in) :: data
 
     ! Use sourced allocation to determine datatype at runtime
     allocate(this % data, source=data)
@@ -110,7 +124,25 @@ contains
     ! Set the next node to null
     if (allocated(this % next)) deallocate(this % next)
 
+    ! Set the previous node to null
+    if (allocated(this % prev)) deallocate(this % prev)
+
   end function create_node
+
+    !===================================================================!
+  ! Returns the string representation of the object
+  !===================================================================!
+  
+  subroutine print(this)
+    
+    class(node), intent(in) :: this
+    
+    print *, "node : "
+    call this % data % print()
+    
+    !xcall this % next % print()
+    
+  end subroutine print
 
   !===================================================================!
   ! Instantiate an empty list
@@ -132,31 +164,41 @@ contains
   subroutine append(this, item)
 
     class(doubly_linked_list), intent(inout) :: this     
-    class(*), intent(in) :: item
-
+    class(object), intent(in) :: item
+    
     type(node) :: newnode
-
-    ! Create new node encapsulating the data. If the type is already
-    ! an object, then simply object is the data. If not wrap the
-    ! primitive as an object and create a node as usual
-    select type(item)
-    class is (object)
-       newnode = node(item)
-    class default
-       newnode = node(object(item))       
-    end select
+    class(node), allocatable :: tmp
+    
+    call item % print()
+    
+    ! Create new node encapsulating the data
+    newnode = node(item)
     
     if (this % length .eq. 0) then
 
-       ! head, tail are the newly added node
-       allocate(this % tail, source = newnode)        
+       ! head, tail are the newly added node      
        allocate(this % head, source = newnode)
+       allocate(this % tail, source = newnode)
 
+       call this % head % print()
+       call this % tail % print()
+       
+    else if (this % length .eq. 1) then
+
+       allocate(this % head % next, source = newnode)
+             
+       ! Release the pointer to old tail node
+       deallocate(this % tail)
+
+       ! newnode is the new tail node
+       allocate(this % tail, source = newnode)
+       
+       allocate(this % tail % prev, source = newnode)
+          
     else
 
-       ! The next node of the previous tail node is the new node
-       allocate(this % tail % next, source = newnode)
-
+       allocate(tmp, source = this % head % next)
+       
        ! Release the pointer to old tail node
        deallocate(this % tail)
 

@@ -12,17 +12,22 @@ program test_list
   class(doubly_linked_list), allocatable :: list
   
   allocate(list, source = doubly_linked_list())
-
-  call list % append(1)
-  call list % append(1.2)
+  
+!!$  call list % append(1)
+!!$  call list % append(1.2)
+  call list % append(string("hello"))
+  call list % append(string("boopathy"))
   call list % append(string("komahan boopathy"))
-  call list % append('komahan boopathy')
+  call list % append(string("komahan boopathy"))
+!!$  call list % append('komahan boopathy')
   call list % append(list)
-  call list % append(1.0d0)
-  call list % append(.true.)  
+!!$  call list % append(1.0d0)
+!!$  call list % append(.true.)  
 
   print *, list % length
 
+  STOP
+  
   ! Sanity check on BDF coeffs
   test_iterator: block
 
