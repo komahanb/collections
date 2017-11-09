@@ -47,5 +47,7 @@ program test_hashcode_equals
   ! Test the to_string implementation
   call obj % print()
   call first_name % print()
+
+  deallocate(obj)
   
 end program test_hashcode_equals

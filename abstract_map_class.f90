@@ -41,8 +41,6 @@ contains
     class(*)        , intent(in) :: value
     type(map_entry) , pointer   :: next
 
-    this % hash  = hash
-
     allocate(this % key, source = key)
     allocate(this % value, source = value)
       

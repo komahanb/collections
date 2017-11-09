@@ -71,7 +71,7 @@ contains
 
   subroutine print(this)
     
-    class(hashtable), intent(inout) :: this
+    class(hashtable), intent(in) :: this
     
     print *, "hashtable@    ", this % hashcode()
     print *, " count:       ", this % count
