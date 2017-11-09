@@ -1,5 +1,5 @@
 !=====================================================================!
-! Contains a derived type string and implemented procedures
+! Contains a derived type 'string' and implemented procedures
 !
 ! Author: Komahan Boopathy (komahan@gatech.edu)
 !=====================================================================!
@@ -23,7 +23,7 @@ module string_class
    contains
 
      ! Override the parent class methods
-     procedure :: equals
+     ! procedure :: equals
 
      ! Destructor
      final :: destroy
@@ -45,19 +45,9 @@ contains
   pure type(string) function create(str) result (this)
 
     type(character(*)), intent(in) :: str
-    type(integer) :: h, i, s
     
     allocate(this % str, source=str) ! source copies, mold does not
-    this % count = len(str)
-    
-    ! Compute hash: s[1]*31^(n) + s[2]*31^(n-1) + ... + s[n]*31^0
-    do i = 1, this % count
-       s = ichar(this % str(i:i))
-       h = h + s*(31**(this%count-1))
-    end do
-
-    ! Set into the instance
-    this % hash = h
+    this % count = len(str)    
 
   end function create
   
@@ -82,31 +72,33 @@ contains
   
   type(logical) function equals(this, element)
 
-    class(string) , intent(in) :: this
-    class(*)      , intent(in) :: element 
+    class(string), intent(in) :: this
+    class(*)     , intent(in) :: element
 
     ! Return .true. right away if they are the same memory locations
     if (loc(element) .eq. loc(this)) then
        equals = .true.
        return
     end if
-
-    ! Determine the type at runtime
-    select type(element)
-
-    ! Raw character array
-    type is (character(len=*))
-       equals  = this % str .eq. element
-
-    ! Wrapped string
-    class is (string)
-       equals = element % str .eq. this % str
-
-    ! Not a string , so they can't be equal
-    class default
-       equals = .false.
-
-    end select
+    
+!!$
+!!$    ! Determine the type at runtime
+!!$    select type(element)
+!!$
+!!$    ! Raw character array
+!!$    type is (character(len=*))
+!!$       equals  = this % str .eq. element
+!!$
+!!$    ! Wrapped string
+!!$    class is (string)
+!!$       equals = element % str .eq. this % str
+!!$       equals = element.equals(this % str)
+!!$
+!!$    ! Not a string , so they can't be equal
+!!$    class default
+!!$       equals = .false.
+!!$
+!!$    end select
 
   end function equals
   

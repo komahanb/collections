@@ -1,3 +1,9 @@
+!=====================================================================!
+! Module containing Object type which is the topmost in hierarchy.
+!
+! Author: Komahan Boopathy (komahan@gatech.edu)
+!=====================================================================!
+
 module object_class
 
   implicit none
@@ -5,44 +11,29 @@ module object_class
   private
   public :: object
 
+  !-------------------------------------------------------------------!
+  ! Type definition
+  !-------------------------------------------------------------------!
+  
   type :: object
 
-     class(*), allocatable :: data
-     type(integer) :: hash = 0
-     
    contains
      
      procedure :: equals
      procedure :: hashcode
      procedure :: print
-
-!!$     procedure :: clone
-!!$     procedure :: finalize
-!!$     procedure :: get_class
-     
-!!$     generic :: assignment(=) => set_entry
      
   end type object
+
+  !-------------------------------------------------------------------!
+  ! Constructor function for type
+  !-------------------------------------------------------------------!
   
-  interface object
-     module procedure create_object
-  end interface object
+!!$  interface object
+!!$     module procedure create_object
+!!$  end interface object
 
 contains
-
-  !===================================================================!
-  ! Wrap the primitive/derived type and create an object
-  !===================================================================!
-  
-  type(object) function create_object(data) result(this)
-    
-    class(*), intent(in), optional :: data
-    
-    if (present(data)) allocate(this % data, source = data)
-    print *, "creating object", loc(this)
-    this % hash = loc(this)
-    
-  end function create_object
   
   !===================================================================!
   ! Returns if the supplied instance is equal to the instance on which
@@ -50,30 +41,25 @@ contains
   !===================================================================!
   
   type(logical) function equals(this, element)
-
+    
     class(object) , intent(in) :: this
     class(*)      , intent(in) :: element 
 
-    ! compare the memory addresses
+    ! objects are equal only if they are coexistant in space-time
     equals = loc(element) .eq. loc(this)
 
   end function equals
 
   !===================================================================!
-  ! Returns the hashcode of the object
+  ! Returns the unique hashcode of the object
   !===================================================================!
 
   type(integer) function hashcode(this)
 
-    class(object), intent(inout) :: this
+    class(object), intent(in) :: this
 
-    ! Set hashcode if constructor was not invoked before
-    if ( this % hash .eq. 0 ) then
-       this % hash = loc(this)
-    end if
-    
     ! Return the memory address as hashcode
-    hashcode = this % hash
+    hashcode = loc(this)
 
   end function hashcode
   
@@ -83,7 +69,7 @@ contains
   
   subroutine print(this)
     
-    class(object), intent(inout) :: this
+    class(object), intent(in) :: this
     
     print *, "object@", this % hashcode()
     
