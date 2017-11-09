@@ -31,7 +31,7 @@ module iterator_interface
   private
   public :: iterator
 
-  type, extends(object), abstract :: iterator
+  type, abstract, extends(object) :: iterator
 
    contains
 
@@ -56,10 +56,10 @@ module iterator_interface
      ! Returns the next element in collection
      !----------------------------------------------------------------!
      
-     pure function next(this) result(next_entry)
+     function next(this) result(next_entry)
        import iterator
        import object
-       class(iterator), intent(in) :: this     
+       class(iterator), intent(inout) :: this     
        class(object), allocatable       :: next_entry
      end function next
 

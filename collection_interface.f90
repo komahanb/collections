@@ -32,7 +32,7 @@ module collection_interface
 !!$     procedure :: to_string
 
      procedure(get_iterator), deferred :: get_iterator
-     procedure(size)        , deferred :: size
+     procedure(size), deferred :: size
 
   end type collection
 

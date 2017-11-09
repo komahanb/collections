@@ -55,13 +55,13 @@ contains
 
     ! Assume that the element is not in the abstract_collection
     contains = .false.
-    
+
     if (loc(element) .eq. 0) then
-       
+
        check_null_obj: do while(it % has_next())
-          
+
           ! If you get an not associated pointer, then yay!
-          if ( .not. associated(it%next()) ) then
+          if ( .not. associated(it % next())) then
              contains =  .true.
              return
           end if
@@ -74,15 +74,15 @@ contains
 
        check_not_null: do while(it % has_next())
 
-          if (element % equals( it%next() )) then
+          if (element % equals(it % next())) then
              contains =  .true.
              return
           end if
-          
+
        end do check_not_null
 
     end if
-    
+
   end function contains
 
 end module abstract_collection_class
