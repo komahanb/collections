@@ -15,29 +15,36 @@ program test_list
   
 !!$  call list % append(1)
 !!$  call list % append(1.2)
-  call list % append(string("hello"))
-  call list % append(string("boopathy"))
-  call list % append(string("komahan boopathy"))
-  call list % append(string("komahan boopathy"))
+  call list % append(string("1hello"))
+  call list % append(string("2boopathy"))
+  call list % append(string("3komahan boopathy"))
+  call list % append(string("4komahan"))
+  call list % append(string("5komahan"))
 !!$  call list % append('komahan boopathy')
-  call list % append(list)
+!  call list % append(list)
 !!$  call list % append(1.0d0)
 !!$  call list % append(.true.)  
 
   print *, list % length
 
-  STOP
-  
+  call list % head % data % print()
+  call list % head % next % data % print()
+  call list % head % next % next % data % print()
+  call list % head % next % next % next % data % print()
+
   ! Sanity check on BDF coeffs
   test_iterator: block
 
     class(iterator), allocatable :: it
-    type(object) :: tmp
+    class(object), allocatable :: tmp
+
     allocate(it, source = list % get_iterator())
     !allocate(it, source = list_iterator(list%head))
     
     do while(it % has_next())
-       !tmp = it % next()
+       call it % get_next(tmp)
+       if (allocated(tmp)) call tmp % print()
+       stop
     end do
 
 !    print *, it % has_next()

@@ -77,7 +77,7 @@ contains
     
     class(string), intent(in) :: this
     
-    print *, "string : ", this % str
+    print *, "string object at address", loc(this), "[", this % str ,"]"
     
   end subroutine print
   

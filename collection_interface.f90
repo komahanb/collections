@@ -55,9 +55,9 @@ module collection_interface
        class(collection), intent(in) :: this       
      end function size
 
-     pure function get_iterator(this)
+      function get_iterator(this)
        import collection, iterator
-       class(collection), intent(in)  :: this
+       class(collection), intent(inout)  :: this
        class(iterator)  , allocatable :: get_iterator
      end function get_iterator
 

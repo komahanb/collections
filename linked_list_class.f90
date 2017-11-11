@@ -4,9 +4,9 @@
 
 module linked_list_class
 
-  use object_class, only : object
-  use abstract_collection_class, only : abstract_collection
-  use iterator_interface, only : iterator
+  use object_class              , only : object
+  use abstract_collection_class , only : abstract_collection
+  use iterator_interface        , only : iterator
 
   implicit none
 
@@ -18,7 +18,7 @@ module linked_list_class
   ! Node is a special type of object that points to other nodes
   !-------------------------------------------------------------------!
 
-  type, extends(object) :: node
+  type, extends(object):: node
 
      ! The data can be encapsulated as any object
      class(object), allocatable :: data
@@ -27,7 +27,7 @@ module linked_list_class
      type(node), allocatable :: next
 
      ! Points to the previous node
-     type(node), allocatable :: prev
+     ! type(node), allocatable :: prev
 
    contains
 
@@ -58,7 +58,9 @@ module linked_list_class
      procedure :: get_iterator
 
      ! Special methods
-     procedure :: append
+     !procedure :: insert_forward
+     procedure :: append, appendON
+     !procedure :: clear, clear_forward
 
   end type doubly_linked_list
 
@@ -73,12 +75,12 @@ module linked_list_class
   
   type, extends(iterator) :: list_iterator
      
-     type(node), allocatable :: current_node
+     class(node), allocatable :: current_node
 
    contains
      
      procedure :: has_next
-     procedure :: next
+     procedure :: get_next
      !procedure :: has_prev
      !procedure :: prev
 
@@ -96,17 +98,35 @@ contains
   ! Create an iterator to traverse the list and perform operations
   !===================================================================!
 
-  pure type(list_iterator) function create_list_iterator(current_node) &
+  type(list_iterator) function create_list_iterator(current_node) &
        & result(this)
 
     !class(doubly_linked_list), intent(in) :: list    
-    class(node), intent(in) :: current_node
+    class(node), intent(inout), target :: current_node
 
     ! Point to the list
     !allocate(this % list, source = list)
 
+    print *, "loc this % current_node", loc(this % current_node)
+    print *, "loc        current_node", loc(       current_node)
+
     ! Point to the current node
     allocate(this % current_node, source = current_node)
+!!$
+!!$
+!!$    print *, 'sjfhaslkjfh:'    
+!!$    call this % current_node % data % print()
+!!$    call this % current_node % next % data % print()
+!!$    call this % current_node % next % next % data % print()
+!!$    call this % current_node % next % next % next % data % print()
+!!$    print *, 'sjfhaslkjfh:'
+!!$
+!!$    call current_node % data % print()
+!!$    call current_node % next % data % print()
+!!$    call current_node % next % next % data % print()
+!!$    call current_node % next % next % next % data % print()
+
+!!$print *, 'ksf;ash'
 
   end function create_list_iterator
   
@@ -125,11 +145,11 @@ contains
     if (allocated(this % next)) deallocate(this % next)
 
     ! Set the previous node to null
-    if (allocated(this % prev)) deallocate(this % prev)
+    !if (allocated(this % prev)) deallocate(this % prev)
 
   end function create_node
-
-    !===================================================================!
+  
+  !===================================================================!
   ! Returns the string representation of the object
   !===================================================================!
   
@@ -158,57 +178,128 @@ contains
   end function create_doubly_linked_list
 
   !===================================================================!
+  ! Appends the node
+  !===================================================================!
+
+  subroutine appendON(this, item)
+
+    class(doubly_linked_list), intent(inout) :: this
+    class(object), intent(in) :: item
+
+    ! Start with head and try until the node is added
+    call insert_forward(this % head, node(item))
+    
+    ! The node is added at this point
+    this % length = this % length + 1
+
+  end subroutine appendON
+
+  !===================================================================!
+  ! 
+  !===================================================================!
+  
+  recursive subroutine insert_forward(current, newnode)
+
+    !class(doubly_linked_list), intent(in)  :: this
+    type(node), allocatable, intent(inout) :: current
+    type(node), intent(in)                 :: newnode
+
+
+
+    if (.not. allocated(current)) then
+       ! Add the node is spot is unallocated
+       allocate(current, source = newnode)
+
+       print *, "insert"
+       call newnode % data % print()
+
+    else
+       ! Try the next spot
+       call insert_forward(current % next, newnode)
+    end if
+
+  end subroutine insert_forward
+
+  !===================================================================!
   ! Append the item to list of nodes
   !===================================================================!
 
   subroutine append(this, item)
 
-    class(doubly_linked_list), intent(inout) :: this     
+    class(doubly_linked_list), intent(inout) :: this
     class(object), intent(in) :: item
+
+!!$    class(node), allocatable :: newnode
+!!$    class(node), allocatable :: tmp
     
-    type(node) :: newnode
-    class(node), allocatable :: tmp
-    
-    call item % print()
-    
-    ! Create new node encapsulating the data
-    newnode = node(item)
-    
-    if (this % length .eq. 0) then
 
-       ! head, tail are the newly added node      
-       allocate(this % head, source = newnode)
-       allocate(this % tail, source = newnode)
+    call this % appendON(item)
 
-       call this % head % print()
-       call this % tail % print()
-       
-    else if (this % length .eq. 1) then
-
-       allocate(this % head % next, source = newnode)
-             
-       ! Release the pointer to old tail node
-       deallocate(this % tail)
-
-       ! newnode is the new tail node
-       allocate(this % tail, source = newnode)
-       
-       allocate(this % tail % prev, source = newnode)
-          
-    else
-
-       allocate(tmp, source = this % head % next)
-       
-       ! Release the pointer to old tail node
-       deallocate(this % tail)
-
-       ! Now point to new tail node
-       allocate(this % tail, source = newnode)
-
-    end if
-
-    ! The list has grown by 1
-    this % length = this % length + 1
+!!$
+!!$    call item % print()
+!!$    
+!!$    ! Create new node encapsulating the data
+!!$    allocate(newnode, source = node(item))
+!!$    
+!!$    if (this % length .eq. 0) then
+!!$
+!!$       ! head, tail are the newly added node      
+!!$       allocate(this % head, source = newnode)
+!!$       allocate(this % tail, source = newnode)
+!!$
+!!$       !call this % head % print()
+!!$       !call this % tail % print()
+!!$       
+!!$    else if (this % length .eq. 1) then
+!!$
+!!$       allocate(this % head % next, source = newnode)
+!!$             
+!!$       ! Release the pointer to old tail node
+!!$       deallocate(this % tail)
+!!$
+!!$       ! newnode is the new tail node
+!!$       allocate(this % tail, source = newnode)
+!!$       
+!!$    else if (this % length .eq. 2) then
+!!$
+!!$       allocate(this % head % next % next, source = newnode)
+!!$             
+!!$       ! Release the pointer to old tail node
+!!$       deallocate(this % tail)
+!!$
+!!$       ! newnode is the new tail node
+!!$       allocate(this % tail, source = newnode)
+!!$
+!!$       
+!!$    else if (this % length .eq. 3) then
+!!$
+!!$       allocate(this % head % next % next % next, source = newnode)
+!!$             
+!!$       ! Release the pointer to old tail node
+!!$       deallocate(this % tail)
+!!$
+!!$       ! newnode is the new tail node
+!!$       allocate(this % tail, source = newnode)
+!!$              
+!!$    else
+!!$
+!!$       allocate(this % tail % next, source = newnode)
+!!$       
+!!$       
+!!$       allocate(tmp, source = this % head % next)
+!!$       
+!!$       ! Release the pointer to old tail node
+!!$       deallocate(this % tail)
+!!$
+!!$       ! Now point to new tail node
+!!$       allocate(this % tail, source = newnode)
+!!$
+!!$    end if
+!!$
+!!$    ! The list has grown by 1
+!!$    this % length = this % length + 1
+!!$
+!!$    deallocate(newnode)
 
   end subroutine append
 
@@ -228,13 +319,13 @@ contains
   ! Creates a new iterator instance, points it to the head and returns
   !===================================================================!
 
-  pure function get_iterator(this)
+   function get_iterator(this)
 
-    class(doubly_linked_list), intent(in) :: this
+    class(doubly_linked_list), intent(inout) :: this
     class(iterator), allocatable :: get_iterator
 
     ! ? traverse from tail node if optional argument is given
-    allocate(get_iterator, source = list_iterator(this % head))
+    allocate(get_iterator, source = create_list_iterator(this % head % next))
 
   end function get_iterator
 
@@ -254,26 +345,34 @@ contains
   ! Returns the next element in collection
   !----------------------------------------------------------------!
 
-  function next(this) result(next_entry)
+  subroutine get_next(this, out_node)
 
     class(list_iterator), intent(inout) :: this
-    class(object), allocatable :: next_entry
+    class(object), allocatable, intent(inout) :: out_node
     class(node), allocatable :: tmp
-   
-    allocate(next_entry, source = this % current_node)
 
-    if (allocated(this % current_node % next)) then
+    allocate(tmp, source = this % current_node % next)
 
-       allocate(tmp, source = this % current_node % next)
-       deallocate(this % current_node)
-       allocate(this % current_node, source = tmp)
-    else
-       deallocate(this % current_node)
-    end if
+    print *, "prit"
+    call this % current_node % data % print()
+    call this % current_node % next % data % print()
+    call tmp % data % print()
+    print *, "prit"
 
-  end function next
+    
 
-  
+    print *, "dallocated cusakjfhls"
+
+    if (allocated(out_node)) deallocate(out_node)
+    allocate(out_node, source = this % current_node  % data)
+
+    print *, "outnode"
+
+    !if (allocated(this % current_node)) deallocate(this % current_node)
+    !allocate(this % current_node , source =tmp)
+
+  end subroutine get_next
+
   !===================================================================!
   ! Destroy the iterator when it goes out of scope
   !===================================================================!
@@ -282,7 +381,7 @@ contains
     
     type(list_iterator), intent(inout) :: this
     
-    if(allocated(this % current_node)) deallocate(this % current_node)
+    !if(allocated(this % current_node)) deallocate(this % current_node)
 
   end subroutine destroy
 

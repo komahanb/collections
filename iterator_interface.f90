@@ -36,7 +36,7 @@ module iterator_interface
    contains
 
      procedure(has_next), deferred :: has_next
-     procedure(next)    , deferred :: next
+     procedure(iget_next), deferred :: get_next
 
      ! procedure :: remove ! optional
 
@@ -56,12 +56,13 @@ module iterator_interface
      ! Returns the next element in collection
      !----------------------------------------------------------------!
      
-     function next(this) result(next_entry)
+     subroutine iget_next(this, out_node)
        import iterator
        import object
-       class(iterator), intent(inout) :: this     
-       class(object), allocatable       :: next_entry
-     end function next
+       class(iterator), intent(inout) :: this
+       class(object), allocatable, intent(inout) :: out_node
+
+     end subroutine iget_next
 
   end interface
 
