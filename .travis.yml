@@ -1,0 +1,33 @@
+language: fortran
+fast_finish: true
+
+python:
+  - 7.0
+
+os:
+  - linux
+
+sudo: required
+dist: trusty
+group: edge
+
+notifications:
+    email: false
+
+git:
+  depth: 3
+
+# gfortran >= 7 required
+addons:
+  apt:
+    sources: ubuntu-toolchain-r-test
+    packages: gfortran-7
+
+before_install:
+  - sudo update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-7 50
+
+install: make
+
+script: coverage run test_list -v
+
+after_success: coveralls
