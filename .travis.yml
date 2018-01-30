@@ -1,7 +1,6 @@
 language: fortran
-fast_finish: true
 
-python:
+fortran:
   - 7.0
 
 os:
@@ -15,7 +14,7 @@ notifications:
     email: false
 
 git:
-  depth: 3
+  depth: 1
 
 # gfortran >= 7 required
 addons:
@@ -28,6 +27,4 @@ before_install:
 
 install: make
 
-script: coverage run test_list -v
-
-after_success: coveralls
+script: ./test_list
