@@ -4,7 +4,7 @@ module hashmap_class
   use object_class, only : object
   use iso_fortran_env, only : dp => REAL64
   use iterator_interface, only : iterator
-!!$
+
 !!$  type, extends(abstract_map) :: hashmap
 !!$
 !!$     class(object), allocatable :: table(:)    ! number of values
