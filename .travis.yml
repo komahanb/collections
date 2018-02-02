@@ -19,18 +19,11 @@ git:
 # gfortran >= 7 required
 addons:
   apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    packages:
-    - libblas-dev
-    - liblapack-dev
-    - libopenmpi-dev
-    - openmpi-bin
+    sources: ubuntu-toolchain-r-test
+    packages: gfortran-7
 
 before_install:
-  # Need Cython for generating C/python wrapper
-  - pip install --upgrade pip
-  - pip install Cython --user
+  - sudo update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-7 50
 
 install: make
 
